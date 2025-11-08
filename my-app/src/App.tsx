@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-
+import { playNote } from './utils/utils'
 interface Square {
   color: string;
   note: string;
-  active: boolean;
+  isSelected: boolean;
 }
 
 function App() {
   const [count, setCount] = useState(0)
   const [squares, setSquares] = useState<Square[][]>([]);
+  const [drumsEnabled, setDrumsEnabled] = useState(false);
 
   function generateColumn(length: number): Square[] {
     let col = [];
@@ -21,7 +22,7 @@ function App() {
       col.push({
         color: colors[colorsIndex],
         note: notes[colorsIndex] + octave,
-        active: false
+        isSelected: false
       });
     }
     return col;
@@ -43,7 +44,7 @@ function App() {
     const newSquares = squares.map((col, cIdx) =>
       col.map((square, rIdx) => {
         if (cIdx === colIndex && rIdx === rowIndex) {
-          return { ...square, active: !square.active };
+          return { ...square, active: !square.isSelected };
         }
         return square;
       })
@@ -67,11 +68,11 @@ function App() {
               {column.map((square: Square, rowIndex: number) => (
                 <div
                   key={`${colIndex}-${rowIndex}`}
-                  className={`square ${square.active ? 'active' : ''}`}
+                  className={`square ${square.isSelected ? 'active' : ''}`}
                   data-note={square.note}
                   data-color={square.color}
                   style={{
-                    backgroundColor: square.active ? square.color.toLowerCase() : 'transparent'
+                    backgroundColor: square.isSelected ? square.color.toLowerCase() : 'transparent'
                   }}
                   onClick={() => toggleSquare(colIndex, rowIndex)}
                 >
