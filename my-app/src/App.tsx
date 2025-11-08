@@ -10,7 +10,6 @@ interface Square {
 function App() {
   const [squares, setSquares] = useState<Square[][]>([]);
   const [drumsEnabled, setDrumsEnabled] = useState(false);
-  const [playing, setPlaying] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [dragMode, setDragMode] = useState<'select' | 'deselect' | null>(null);
   const [playing, setPlaying] = useState(false);
