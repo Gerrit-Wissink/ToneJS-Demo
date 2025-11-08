@@ -18,8 +18,9 @@ const playSequence = async (squares: Square[][], tempo: number, drumsEnabled: bo
 
     let chords = squares.map((prev) => {
         let temp = prev.map((col) => {
-            return col.isSelected ? col.note : '';
+            return col.isSelected ? col.note : null;
         })
+        .filter((val) => val !== null);
         return temp;
     });
 
@@ -27,7 +28,7 @@ const playSequence = async (squares: Square[][], tempo: number, drumsEnabled: bo
 
     stopPlaying();
 
-    synth = new Tone.PolySynth().toDestination();
+    if (!synth) synth = new Tone.PolySynth().toDestination();
     console.log(chords);
     chord_seq = new Tone.Sequence((time, chord) => {
       synth.triggerAttackRelease(chord, "8n", time);
@@ -56,10 +57,10 @@ async function stopPlaying(){
       chord_seq.stop();
       chord_seq.dispose();
     }
-    if (synth) {
-      console.log("Destroying the synth");
-      synth.dispose();
-    }
+    // if (synth) {
+    //   console.log("Destroying the synth");
+    //   synth.dispose();
+    // }
     if (kick) {
       console.log("Destroying the kick");
       kick.dispose();

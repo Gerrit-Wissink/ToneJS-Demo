@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { playNote, playSequence } from './utils/utils'
+
+
 interface Square {
   color: string;
   note: string;
