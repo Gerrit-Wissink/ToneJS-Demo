@@ -1,4 +1,9 @@
 import * as Tone from "tone";
+interface Square {
+  color: string;
+  note: string;
+  isSelected: boolean;
+}
 let synth: Tone.PolySynth;
 let chord_seq: Tone.Sequence;
 let kick: Tone.MembraneSynth;
@@ -8,8 +13,17 @@ let snare: Tone.NoiseSynth;
 
 // Expects the squares array
 // Containing some arrays with selected values and some arrays that are empty
-const playSequence = async (chords: string[][], tempo: number, drumsEnabled: boolean) => {
+const playSequence = async (squares: Square[][], tempo: number, drumsEnabled: boolean) => {
     await Tone.start();
+
+    let chords = squares.map((prev) => {
+        let temp = prev.map((col) => {
+            return col.isSelected ? col.note : '';
+        })
+        return temp;
+    });
+
+    console.log(chords);
 
     stopPlaying();
 

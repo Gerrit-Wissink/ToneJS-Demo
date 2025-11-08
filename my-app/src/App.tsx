@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import { playNote } from './utils/utils'
+import { playNote, playSequence } from './utils/utils'
 interface Square {
   color: string;
   note: string;
@@ -10,6 +10,7 @@ interface Square {
 function App() {
   const [squares, setSquares] = useState<Square[][]>([]);
   const [drumsEnabled, setDrumsEnabled] = useState(false);
+  const [playing, setPlaying] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [dragMode, setDragMode] = useState<'select' | 'deselect' | null>(null);
 
