@@ -16,7 +16,6 @@ html,
 
 #canvas {
   display: flex;
-  gap: 2px;
   padding: 10px;
   background-color: #1a1a1a;
   flex: 1;
@@ -26,7 +25,6 @@ html,
 .column {
   display: flex;
   flex-direction: column;
-  gap: 2px;
   flex: 1;
 }
 
