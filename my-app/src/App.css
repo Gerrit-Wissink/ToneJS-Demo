@@ -22,6 +22,14 @@ html,
   overflow: hidden;
 }
 
+/* try to prevent native text selection / drag behavior for the canvas */
+#canvas, #canvas * {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-drag: none;
+}
+
 .column {
   display: flex;
   flex-direction: column;
