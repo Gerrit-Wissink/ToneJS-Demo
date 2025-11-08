@@ -93,9 +93,19 @@ function App() {
   }, []);
 
   useEffect(() => {
-    window.addEventListener('mouseup', handleMouseUp);
+    const cancel = () => {
+      setIsMouseDown(false);
+      setDragMode(null);
+    }
+
+    window.addEventListener('mouseup', cancel);
+    window.addEventListener('blur', cancel);
+    window.addEventListener('dragend', cancel);
+
     return () => {
-      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('mouseup', cancel);
+      window.removeEventListener('blur', cancel);
+      window.removeEventListener('dragend', cancel);
     }
   }, []);
 
@@ -117,7 +127,9 @@ function App() {
                   style={{
                     backgroundColor: square.isSelected ? square.color.toLowerCase() : 'transparent'
                   }}
-                  onMouseDown={() => handleMouseDown(colIndex, rowIndex)}
+                  draggable={false}
+                  onDragStart={(e) => e.preventDefault()}
+                  onMouseDown={(e) => { e.preventDefault(); handleMouseDown(colIndex, rowIndex); }}
                   onMouseEnter={() => handleMouseEnter(colIndex, rowIndex)}
                 >
                 </div>
