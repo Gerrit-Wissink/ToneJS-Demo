@@ -95,7 +95,6 @@ function App() {
 
   function handleBpmChange(event: React.ChangeEvent<HTMLInputElement>) {
     setBpm(parseInt(event.target.value));
-    console.log(bpm);
   }
 
   useEffect(() => {
