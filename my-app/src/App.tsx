@@ -103,7 +103,7 @@ function App() {
     <>
       <div>
         <div id="top">
-          this will hold restart
+          <button id='restart' onClick={init}>Restart</button>
         </div>
         <div id='canvas'>
           {squares.map((column, colIndex) => (
