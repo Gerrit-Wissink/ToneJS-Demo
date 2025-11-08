@@ -27,7 +27,14 @@ const playSequence = async (chords: string[][], tempo: number, drumsEnabled: boo
     console.log(Tone.Transport.bpm.value = tempo);
 
     Tone.Transport.start();
-  }
+}
+
+const playNote = async (note: string) => {
+  await Tone.start();
+  if (!synth) synth = new Tone.PolySynth().toDestination();
+  synth.triggerAttackRelease(note, 0.3);
+};
+
 
 async function stopPlaying(){
     if (chord_seq) {
@@ -73,4 +80,4 @@ const playDrums = () => {
     drumSequence.start(0);
 }
 
-export { playSequence, stopPlaying };
+export { playSequence, stopPlaying, playNote };

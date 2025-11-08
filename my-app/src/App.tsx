@@ -2,10 +2,12 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { playNote } from './utils/utils'
 
 function App() {
   const [count, setCount] = useState(0)
   const [squares, setSquares] = useState(Array(10).fill(generateColumn(14)));
+  const [drumsEnabled, setDrumsEnabled] = useState(false);
 
   function generateColumn(length: number) {
     let col = [];
@@ -38,6 +40,7 @@ function App() {
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
+        <button onClick={() => {playNote('A3')}}>Play A</button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
