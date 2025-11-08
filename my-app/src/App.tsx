@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import { playNote } from './utils/utils'
+import { playNote, playSequence } from './utils/utils'
 interface Square {
   color: string;
   note: string;
@@ -12,6 +12,8 @@ function App() {
   const [drumsEnabled, setDrumsEnabled] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [dragMode, setDragMode] = useState<'select' | 'deselect' | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [bpm, setBpm] = useState(120);
 
   function generateColumn(length: number): Square[] {
     let col = [];
@@ -82,6 +84,20 @@ function App() {
     }
   }
 
+  function handlePlayButton() {
+    setPlaying(!playing);
+    // playSequence(squares, 120, drumsEnabled);
+  }
+
+  function handleDrumsButton() {
+    setDrumsEnabled(!drumsEnabled);
+  }
+
+  function handleBpmChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setBpm(parseInt(event.target.value));
+    console.log(bpm);
+  }
+
   useEffect(() => {
     init();
   }, []);
@@ -132,7 +148,19 @@ function App() {
           ))}
         </div>
         <div id="bottom">
-          this will hold controls
+          <button onClick={handlePlayButton}>{playing ? "Pause" : "Play"}</button>
+          <button onClick={handleDrumsButton}>{drumsEnabled ? "Disable Background Drums" : "Enable Background Drums"}</button>
+          <div>
+            <label htmlFor='bpmSlider'>BPM: {bpm}</label>
+            <input id='bpmSlider'
+              type='range'
+              min={40}
+              max={240}
+              step={1}
+              value={bpm}
+              onChange={handleBpmChange}>
+            </input>
+          </div>
         </div>
       </div>
     </>
