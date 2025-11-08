@@ -8,6 +8,7 @@ let synth: Tone.PolySynth;
 let chord_seq: Tone.Sequence;
 let kick: Tone.MembraneSynth;
 let snare: Tone.NoiseSynth;
+let drum_seq: Tone.Sequence;
 
 
 
@@ -26,15 +27,28 @@ const playSequence = async (squares: Square[][], tempo: number, drumsEnabled: bo
 
     console.log(chords);
 
-    stopPlaying();
+    // stopPlaying();
 
     if (!synth) synth = new Tone.PolySynth().toDestination();
-    console.log(chords);
-    chord_seq = new Tone.Sequence((time, chord) => {
-      synth.triggerAttackRelease(chord, "8n", time);
-    }, chords, "8n");
+    /*
+        -------------------------
+        NOTE: Tone.Sequence will ignore 2D array structure and will 
+        basically treat it as a 1D array
+        -------------------------
+    */
 
-    chord_seq.start(0); // start at beginning of transport timeline
+    const beats = chords.map((_, i) => i);
+    chord_seq = new Tone.Sequence((time, index) => {
+      const chord = chords[index];
+      if(chord && chord.length > 0) {
+        synth.triggerAttackRelease(chord, "8n", time);
+      }
+    }, beats, "8n");
+
+    chord_seq.start(
+      // Tone.now() + 0.02
+      0
+    ); // start at beginning of transport timeline
     if(drumsEnabled){
       playDrums();
     }
@@ -53,14 +67,15 @@ const playNote = async (note: string) => {
 
 async function stopPlaying(){
     if (chord_seq) {
-      console.log("Destroying the chord seqence");
-      chord_seq.stop();
+      console.log("Destroying the chord sequence");
+      chord_seq.stop(Tone.now() + 0.01);
       chord_seq.dispose();
     }
-    // if (synth) {
-    //   console.log("Destroying the synth");
-    //   synth.dispose();
-    // }
+    if (drum_seq) {
+      console.log("Destroying the drum sequence");
+      drum_seq.stop(Tone.now() + 0.01);
+      drum_seq.dispose();
+    }
     if (kick) {
       console.log("Destroying the kick");
       kick.dispose();
@@ -75,24 +90,32 @@ async function stopPlaying(){
 
 
 const playDrums = () => {
-    kick = new Tone.MembraneSynth().toDestination();
-    snare = new Tone.NoiseSynth({
+  // if there's an existing drum sequence, stop & dispose it first
+  if (drum_seq) {
+    drum_seq.stop();
+    drum_seq.dispose();
+    drum_seq = undefined as unknown as Tone.Sequence;
+  }
+
+  kick = new Tone.MembraneSynth().toDestination();
+  snare = new Tone.NoiseSynth({
         noise: { type: "white" },
         envelope: { attack: 0.001, decay: 0.2, sustain: 0 }
     }).toDestination();
     
     // Sequence using Tone.Sequence
-    const drumSequence = new Tone.Sequence((time, step) => {
-        if (step.kick) kick.triggerAttackRelease("C1", "8n", time);
-        if (step.snare) snare.triggerAttackRelease("8n", time);
-    }, [
+  drum_seq = new Tone.Sequence((time, step) => {
+    if (step.kick) kick.triggerAttackRelease("C1", "8n", time);
+    if (step.snare) snare.triggerAttackRelease("8n", time);
+  }, [
         { kick: true, snare: false },
         { kick: false, snare: true },
         { kick: true, snare: false },
         { kick: false, snare: true },
     ], "4n");
 
-    drumSequence.start(0);
+  //Starts the drum sequence on a slight delay
+  drum_seq.start(0);
 }
 
 export { playSequence, stopPlaying, playNote };

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import { playNote, playSequence } from './utils/utils'
+import { playNote, playSequence, stopPlaying } from './utils/utils'
 
 
 interface Square {
@@ -88,7 +88,11 @@ function App() {
 
   function handlePlayButton() {
     setPlaying(!playing);
-    // playSequence(squares, 120, drumsEnabled);
+    if(playing){
+      stopPlaying();
+    }else {
+      playSequence(squares, 120, drumsEnabled);
+    }
   }
 
   function handleDrumsButton() {
