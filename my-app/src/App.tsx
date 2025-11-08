@@ -5,6 +5,22 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [squares, setSquares] = useState(Array(10).fill(generateColumn(14)));
+
+  function generateColumn(length: number) {
+    let col = [];
+    const colors = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink"];
+    const notes = ["C", "D", "E", "F", "G", "A", "B"];
+    for(let i = 0; i < length; i++) {
+      let colorsIndex = i % (colors.length - 1);
+      let octave = 4 + Math.floor(i / (notes.length - 1));
+      col.push( {
+        color: colors[colorsIndex],
+        note: notes[colorsIndex] + octave
+      });
+    }
+    return col;
+  }
 
   return (
     <>
