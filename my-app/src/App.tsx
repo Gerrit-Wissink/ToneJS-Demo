@@ -16,7 +16,8 @@ function App() {
       let octave = 4 + Math.floor(i / (notes.length - 1));
       col.push( {
         color: colors[colorsIndex],
-        note: notes[colorsIndex] + octave
+        note: notes[colorsIndex] + octave,
+        isSelected: false
       });
     }
     return col;
