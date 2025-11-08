@@ -11,6 +11,8 @@ function App() {
   const [count, setCount] = useState(0)
   const [squares, setSquares] = useState<Square[][]>([]);
   const [drumsEnabled, setDrumsEnabled] = useState(false);
+  const [isMouseDown, setIsMouseDown] = useState(false);
+  const [dragMode, setDragMode] = useState<'select' | 'deselect' | null>(null);
 
   function generateColumn(length: number): Square[] {
     let col = [];
@@ -49,7 +51,9 @@ function App() {
     const newSquares = squares.map((col, cIdx) =>
       col.map((square, rIdx) => {
         if (cIdx === colIndex && rIdx === rowIndex) {
-          playNote(square.note);
+          if (!square.isSelected) {
+            playNote(square.note);
+          }
           return { ...square, isSelected: !square.isSelected };
         }
         return square;
@@ -58,8 +62,41 @@ function App() {
     setSquares(newSquares);
   }
 
+  function handleMouseDown(colIndex: number, rowIndex: number) {
+    setIsMouseDown(true);
+    const currentSquare = squares[colIndex][rowIndex];
+    // set the drag mode based off the first 'interacted with' square
+    setDragMode(currentSquare.isSelected ? 'deselect' : 'select');
+    toggleSquare(colIndex, rowIndex);
+  }
+
+  function handleMouseEnter(colIndex: number, rowIndex: number) {
+    if (!isMouseDown || dragMode === null) return;
+
+    const currentSquare = squares[colIndex][rowIndex];
+
+    // only toggle if square state doesn't match the current drag mode
+    if (dragMode === 'select' && !currentSquare.isSelected) {
+      toggleSquare(colIndex, rowIndex);
+    } else if (dragMode === 'deselect' && currentSquare.isSelected) {
+      toggleSquare(colIndex, rowIndex);
+    }
+  }
+
+  function handleMouseUp() {
+    setIsMouseDown(false);
+    setDragMode(null);
+  }
+
   useEffect(() => {
     init();
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      window.removeEventListener('mouseup', handleMouseUp);
+    }
   }, []);
 
   return (
@@ -80,7 +117,8 @@ function App() {
                   style={{
                     backgroundColor: square.isSelected ? square.color.toLowerCase() : 'transparent'
                   }}
-                  onClick={() => toggleSquare(colIndex, rowIndex)}
+                  onMouseDown={() => handleMouseDown(colIndex, rowIndex)}
+                  onMouseEnter={() => handleMouseEnter(colIndex, rowIndex)}
                 >
                 </div>
               ))}
