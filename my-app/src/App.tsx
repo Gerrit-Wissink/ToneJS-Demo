@@ -8,7 +8,6 @@ interface Square {
 }
 
 function App() {
-  const [count, setCount] = useState(0)
   const [squares, setSquares] = useState<Square[][]>([]);
   const [drumsEnabled, setDrumsEnabled] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -81,11 +80,6 @@ function App() {
     } else if (dragMode === 'deselect' && currentSquare.isSelected) {
       toggleSquare(colIndex, rowIndex);
     }
-  }
-
-  function handleMouseUp() {
-    setIsMouseDown(false);
-    setDragMode(null);
   }
 
   useEffect(() => {
