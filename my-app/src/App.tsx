@@ -16,12 +16,17 @@ function App() {
     let col = [];
     const colors = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink"];
     const notes = ["C", "D", "E", "F", "G", "A", "B"];
+
     for (let i = 0; i < length; i++) {
-      let colorsIndex = i % (colors.length);
-      let octave = 4 + Math.floor(i / (notes.length - 1));
+      let reverseI = length - 1 - i; // reverses i to ensure top = high pitch, bottom = low pitch
+
+      let colorsIndex = reverseI % colors.length;
+      let noteIndex = reverseI % notes.length;
+      let octave = 4 + Math.floor(reverseI / notes.length);
+
       col.push({
         color: colors[colorsIndex],
-        note: notes[colorsIndex] + octave,
+        note: notes[noteIndex] + octave,
         isSelected: false
       });
     }
@@ -44,7 +49,8 @@ function App() {
     const newSquares = squares.map((col, cIdx) =>
       col.map((square, rIdx) => {
         if (cIdx === colIndex && rIdx === rowIndex) {
-          return { ...square, active: !square.isSelected };
+          playNote(square.note);
+          return { ...square, isSelected: !square.isSelected };
         }
         return square;
       })
