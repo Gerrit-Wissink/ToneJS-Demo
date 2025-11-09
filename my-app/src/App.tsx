@@ -85,7 +85,6 @@ function App() {
   }
 
   function handlePlayButton() {
-<<<<<<< HEAD
     if (!playing) {
       setPlaying(true);
       console.log(playing);
